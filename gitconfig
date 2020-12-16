@@ -1,0 +1,119 @@
+[alias]
+    get = fetch --all --prune
+    st = status
+    ci = commit
+    br = branch
+    co = checkout
+    
+    df  = diff --ignore-space-change --ignore-space-at-eol
+    dff = difftool -y --ignore-space-change --extcmd "icdiff $@"
+    dfs = diff --name-only --ignore-space-change --ignore-space-at-eol
+    ds  = diff --staged
+
+    # Cheatsheet: https://devhints.io/git-log
+    #
+    # Ordering
+    # --date-order:     Sort commits by date
+    # --topo-order:     Sort commits by branch points first and then by dates
+    #
+    # When you're on a branch:
+    # --first-parent:   When you're on a branch, this will show merge commits
+    #                   from the base, but will hide the individual commits
+    #                   that were rolled up in the merge commit. This helps to
+    #                   focus on changes in your branch, while still seeing the
+    #                   moment where merges introduced updates from the base.
+    # --no-merges:      When you're on a branch, this will not show any merges,
+    #                   not even the merge commit. This helps to focus on ONLY
+    #                   the changes made in the branch, and hides ALL changes
+    #                   that originated in other branches.
+    #
+    lt = log --date-order --topo-order --date=iso --graph --full-history --all --pretty=format:'%x08%x09%C(red)%h %C(cyan)%ad%x08%x08%x08%x08%x08%x08%x08%x08%x08%x08%x08%x08%x08%x08%x08 %C(bold blue)%aN%C(reset)%C(bold yellow)%d %C(reset)%s'
+    #   l(t) means (t)est. I'm not sure how useful this one is yet.
+    #   *   0c2d7d9 2020-01-20 Mariano Peterson Add StaticPages controller
+    #   | * 5388eca 2020-01-26 Mariano Peterson (ch2-toy-app) User must have name and email
+    #   | * 13f25cb 2020-01-26 Mariano Peterson Add User model
+    #   |/
+    #   *   b21c4e3 2020-01-20 Mariano Peterson Update readme
+
+    l    = log --format='%C(yellow)%h %<(12,trunc)%C(white)%an %C(green)%s %C(dim white)(%cr)%C(reset)%C(yellow)%d'
+    #   b026c37 Mariano Pe.. Add site navigation to home page (6 days ago)
+    #   638fb16 Mariano Pe.. Remove "Home | " from home page title (12 days ago) (ch4-rails-flavored-ruby)
+    #   4805644 Mariano Pe.. Use Minitest Reporters (12 days ago)
+
+    lg   = log --graph --pretty=format:'%C(yellow)%h%C(reset) %s %C(dim white)(%cn, %cr)%C(reset)%C(yellow)%d%C(reset)' --abbrev-commit --date=relative --all
+    #   l(g) means show (g)raphical branches:
+    #
+    #   * 0c2d7d9 Add StaticPages controller (Mariano Peterson, 12 days ago)
+    #   | * 5388eca User must have email (Mariano Peterson, 6 days ago) (ch2-toy-app)
+    #   | * 06b4f90 Route / to user list (Mariano Peterson, 6 days ago)
+    #   | * 13f25cb Add User model (Mariano Peterson, 6 days ago)
+    #   |/
+    #   * b21c4e3 Update readme (Mariano Peterson, 12 days ago)
+    ld   = log -p                # l(d) means show (d)iffs
+    ln   = log --summary --stat  # l(n) means show (n)umber of lines changed
+
+    #   FOR USE INSIDE A BRANCH
+    #
+    #   l(b) means focus on the (b)ranch
+    #           (show merge commits, but hide the individual commits pulled in
+    #           by those merge commits)
+    lb  = log --graph --oneline --decorate --first-parent
+    #   l(bb) means focus on the (b)ranch EXCLUSIVELY.
+    #           (only show commits that originated on this branch;
+    #           even hide the merge commits that introduced remote changes)
+    lbb = log --graph --oneline --decorate --first-parent --no-merges master..
+
+    fixup = commit --fixup
+    squash = commit --squash
+    unstage = reset HEAD
+    rum = rebase master@{u}
+
+[core]
+    pager = diff-so-fancy | less --tabs=4 -RFX --IGNORE-CASE
+    # pager = $(brew --prefix)/share/git-core/contrib/diff-highlight/diff-highlight | less -FXRS -x2
+    excludesfile = ~/.gitignore
+[apply]
+    whitespace = nowarn
+[branch]
+    autosetupmerge = true
+    autosetuprebase = always
+[rebase]
+    autosquash = true
+    stat = true
+[push]
+    default = simple
+[log]
+    date = local
+[user]
+    name = Mariano Peterson
+    email = mariano@petersonpages.com
+    #email = mariano.peterson@stitchfix.com
+[credential]
+	helper = osxkeychain
+[filter "lfs"]
+	process = git-lfs filter-process
+	required = true
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+[color]
+    branch = auto
+    diff = always
+    interactive = auto
+    status = auto
+    ui = always 
+[color "diff-highlight"]
+    oldNormal = red bold
+    oldHighlight = red bold 52
+    newNormal = green bold
+    newHighlight = green bold 22
+[color "diff"]
+    meta = 11
+    frag = magenta bold
+    commit = yellow bold
+    old = red bold
+    new = green bold
+    whitespace = red reverse
+[diff-so-fancy]
+    markEmptyLines = false
+    changeHunkIndicators = false
+    stripLeadingSymbols = false
